@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:24532/test
+    username: test
+    password: test
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: ims-consumer-group
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
