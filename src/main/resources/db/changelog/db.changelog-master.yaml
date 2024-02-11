@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.0.0
+      author: smrozowski
+      changes:
+        - createTable:
+            tableName: items
+            columns:
+              - column:
+                  name: item_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: internal_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: quantity
+                  type: INTEGER
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: INTEGER
+                  constraints:
+                    nullable: false
