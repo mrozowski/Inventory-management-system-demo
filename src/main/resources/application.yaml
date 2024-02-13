@@ -12,4 +12,4 @@ spring:
       value-deserializer: com.mrozowski.ims.adapter.incoming.InventoryItemEventMessageDeserializer
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+      value-serializer: com.mrozowski.ims.adapter.outgoing.kafka.InventoryUpdatedEventMessageSerializer
