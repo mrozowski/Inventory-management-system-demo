@@ -12,14 +12,34 @@ It employs Kafka to send events signaling inventory changes, such as items being
 * ElasticSearch
 * Kibana
 * Logstash
+* Docker
 
 ## Project diagram
 ![Kafka](https://github.com/mrozowski/Inventory-management-system-demo/assets/67066372/b0b045b9-73cf-4268-9f7f-6286c8282dd6)
 
-**Test Event Generator Service** - Simple service for generating Kafka Events such as item sold or item added event. 
+**Test Event Generator Service** - Simple service for generating Kafka Events such as item sold or item added event. More about service here [readme.md](/TestEventProducer/readme.md)
 
 **Inventory Service** - Main service, it consumes Kafka events and updates a database. It also publishes events with the current item quantity and alerts when the quantity is low or empty.
  
+
+## How to run
+Make sure you have Java 17, Docker and Docker-Compose on your machine.
+* Run `docker-compose up -d`
+* Run both services. For this, you can use your IDE
+* Fill a database with some test data - _example sql script below_
+* Make a call to `curl localhost:8085/v1/produce/sold?id=1&amount=1`
+* Open Kibana - http://localhost:5601/   - _On the first run you might need to create data view in Kibana to see logs_
+
+
+Example sql script
+``` sql
+INSERT INTO items (internal_id, name, description, quantity, price)
+VALUES ('SKU001', 'Notebook', 'Plain notebook with lined paper', 200, 299),
+       ('SKU002', 'Pen', 'Blue ballpoint pen', 500, 99),
+       ('SKU003', 'Calculator', 'Basic calculator with solar power', 100, 499),
+       ('SKU004', 'Sticky Notes', 'Pack of colorful sticky notes', 300, 199),
+       ('SKU005', 'Highlighter', 'Yellow highlighter pen', 400, 79);
+```
 
 ## Main service diagram
 ![Kafka (1)](https://github.com/mrozowski/Inventory-management-system-demo/assets/67066372/ca54835a-6ac5-4c13-9895-388324fcd01b)
