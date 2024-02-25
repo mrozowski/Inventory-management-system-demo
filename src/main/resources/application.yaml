@@ -13,3 +13,9 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: com.mrozowski.ims.adapter.outgoing.kafka.InventoryUpdatedEventMessageSerializer
+
+logging:
+  level:
+    root: INFO
+  file:
+    name: ./logs/inventory-service.log

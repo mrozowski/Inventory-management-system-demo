@@ -7,7 +7,6 @@ services:
       - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
     image: wurstmeister/kafka
@@ -31,3 +30,77 @@ services:
       - 'PGDATA=/var/lib/postgresql/data/pgdata'
     ports:
       - '${POSTGRES_PORT:-24532}:5432'
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 1G
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    volumes:
+#      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
+      - elasticsearch:/usr/share/elasticsearch/data:Z
+    networks:
+      - elk
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 1G
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.12.2
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - server.name=kibana
+      - server.host=0.0.0.0
+      - elasticsearch.hosts=[http://elasticsearch:9200]
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 1G
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.12.2
+    container_name: logstash
+    volumes:
+      - ./config/logstash/logstash.conf:/usr/share/logstash/config/logstash.conf:ro
+      - ./config/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logs:/usr/share/logstash/logs
+    ports:
+      - "5000:5000"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 1G
+
+networks:
+  elk:
+    driver: bridge
+
+volumes:
+  elasticsearch:

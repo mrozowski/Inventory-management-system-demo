@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 class KafkaEventConsumer(private val facade: InventoryManagementSystemFacade) {
     private val logger = logger()
 
-    @KafkaListener(topics = ["test-topic"], groupId = "ims-consumer-group")
+    @KafkaListener(topics = ["inventory-topic"], groupId = "ims-consumer-group")
     fun listen(message: InventoryItemEventMessage) {
         logger.info("Consumer triggered with message: $message")
         val command = InventoryEventCommand(
